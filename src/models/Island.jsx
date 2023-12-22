@@ -24,7 +24,7 @@ const Island = ({ isRotating, setIsRotating, ...props }) => {
   // get last mouse position
   const lastX = useRef(0);
   const rotationSpeed = useRef(0);
-  const dampingFactor = 0.95;
+  const dampingFactor = 0.98;
 
   const handlePointerDown = (e) => {
     e.stopPropagation();
