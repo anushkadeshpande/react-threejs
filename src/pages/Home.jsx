@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import Loader from "../components/Loader";
 import Island from "../models/Island";
@@ -7,6 +7,9 @@ import Bird from "../models/Bird";
 import Plane from "../models/Plane";
 
 const Home = () => {
+
+  const [isRotating, setIsRotating] = useState(false)
+
   const adjustIslandForScreenSize = () => {
     let screenScale = null;
     let screenPosition = [0, -6.5, -43];
@@ -18,11 +21,26 @@ const Home = () => {
     return [screenScale, screenPosition, rotation];
   };
 
-  const [islandScale, islandPosition, islandRotation] =
-    adjustIslandForScreenSize();
+  const adjustPlaneForScreenSize = () => {
+    let screenScale ,screenPosition;
+    // let rotation = [0.1, 4.7, 0];
 
+    if (window.innerWidth < 768) {
+      screenScale = [1.5, 1.5, 1.5]
+      screenPosition = [0, -1.5, 0]
+    }
+    else{ 
+      screenScale = [1.5, 1.5, 1.5];
+      screenPosition = [0, -4, -4]
+
+    }
+    return [screenScale, screenPosition];
+  };
+  
+  const [islandScale, islandPosition, islandRotation] = adjustIslandForScreenSize();
+  const [planeScale, planePosition] = adjustPlaneForScreenSize()
   return (
-    <section className="w-full h-screen relative">
+    <section className={`w-full h-screen relative ${isRotating? 'cursor-grabbing' : 'cursor-grab' }`}>
       {/* <div className='absolute top-28 left-0 right-0 z-10 flex items-center justify-center'>
         POP
       </div> */}
@@ -48,8 +66,15 @@ const Home = () => {
             position={islandPosition}
             scale={islandScale}
             rotation={islandRotation}
+            isRotating={isRotating}
+            setIsRotating={setIsRotating}
           />
-          <Plane />
+          <Plane 
+            isRotating={isRotating}
+            planePosition={planePosition}
+            planeScale={planeScale}
+            rotation={[0, 20, 0]}
+          />
         </Suspense>
       </Canvas>
     </section>
